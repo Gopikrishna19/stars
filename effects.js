@@ -9,3 +9,9 @@ export const effects = [
     'Maithram',
     'Parama Maithram'
 ];
+
+export const effectGroups = [
+    'Jenmam',
+    'Anujenmam',
+    'Thrijenmam'
+];

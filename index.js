@@ -1,30 +1,82 @@
-import {buildStarSelector, stars} from './stars.js';
+import {buildStarSelector, getStarSet} from './stars.js';
+import {createBasicTable} from './table.js';
+import {effectGroups, effects} from './effects.js';
 
-const select = buildStarSelector((_, value) => redraw(value));
-const starSet = stars.concat(stars);
+const headerSelector = 'tr[data-ei="-1"]';
 
-const cleanGrid = () => document.querySelectorAll('.star').forEach(starElement => starElement.remove());
+const buildCell = (star, select, rerender) => {
+    const td = document.createElement('td');
 
-const redraw = value => {
-  cleanGrid();
+    td.innerHTML = star;
+    td.dataset.set = 'y'; // star set
+    td.onclick = () => {
+        select.value = star;
+        rerender(star, select);
+    };
 
-  for (let j = 0; j < 9; ++j) {
-    for (let i = 0; i < 3; ++i) {
-      const starIndex = i * 9 + j + parseInt(value);
-      const td = document.createElement('td');
-      const tr = document.querySelectorAll('tr')[j + 1];
-
-      td.innerHTML = starSet[starIndex];
-      td.classList.add('star');
-      td.setAttribute('data-index', `${starIndex % 27}`);
-      td.onclick = () => {
-          select.value = starSet[starIndex];
-          redraw(starIndex % 27);
-      };
-
-      tr.appendChild(td);
-    }
-  }
+    return td;
 };
 
-document.getElementById('star-selector').appendChild(select);
+const buildEffects = (selectedStar, select) => {
+    const starSet = getStarSet(selectedStar);
+
+    document.querySelectorAll(`td[data-set="y"]`).forEach(td => td.remove());
+
+    for (let i = 0; i < 9; ++i) {
+        const tr = document.querySelector(`tr[data-ei="${i}"]`);
+
+        tr.appendChild(buildCell(starSet[i], select, buildEffects));
+        tr.appendChild(buildCell(starSet[i + 9], select, buildEffects));
+        tr.appendChild(buildCell(starSet[i + 18], select, buildEffects));
+    }
+};
+
+const createBlankRows = (table) => {
+    for (let i = -1; i < 9; ++i) {
+        const tr = document.createElement('tr');
+
+        tr.dataset.ei = i.toString(); // effect index
+        table.appendChild(tr);
+    }
+};
+
+const createEffectHeaders = () => {
+    const tr = document.querySelector(headerSelector);
+
+    effectGroups.forEach((group, index) => {
+        const th = document.createElement('th');
+
+        th.innerHTML = group;
+        tr.appendChild(th);
+    });
+
+    effects.forEach((effect, index) => {
+        const th = document.createElement('th');
+        const tr = document.querySelector(`tr[data-ei="${index % 9}"]`);
+
+        th.innerHTML = effect;
+        tr.appendChild(th);
+    });
+};
+
+const createHeaderSpacer = () => {
+    const tr = document.querySelector(headerSelector);
+    const td = document.createElement('td');
+    tr.prepend(td);
+};
+
+const createStarSelector = () => {
+    const select = buildStarSelector((event, selectedStar) => {
+        buildEffects(selectedStar, event.target);
+    });
+    document.getElementById('star-selector').appendChild(select);
+};
+
+const buildTable = () => {
+    createBlankRows(createBasicTable());
+    createEffectHeaders();
+    createHeaderSpacer();
+    createStarSelector();
+};
+
+buildTable();

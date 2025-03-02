@@ -41,15 +41,19 @@ export const buildStarSelector = (onChange) => {
     stars.forEach(star => {
         const option = document.createElement('option');
         option.value = star;
-        option.dataset.index = stars.indexOf(star).toString();
         option.innerHTML = star;
         select.appendChild(option);
     });
 
     select.onchange = (event) => {
-        onChange(select.value, event.target.selectedOptions[0].dataset.index);
-        select.value = undefined;
+        onChange(event, event.target.value);
     };
 
     return select;
-}
+};
+
+export const getStarSet = (selectedStar) => {
+    const selectedStarIndex = stars.indexOf(selectedStar);
+
+    return stars.concat(stars).slice(selectedStarIndex, selectedStarIndex + 27);
+};

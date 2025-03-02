@@ -1,11 +1,12 @@
-import {effects} from '../effects.js';
-import {buildStarSelector, stars} from '../stars.js';
+import {effectGroups, effects} from '../effects.js';
+import {buildStarSelector, getStarSet} from '../stars.js';
+import {createBasicTable} from '../table.js';
 
 const headerSelector = 'tr[data-ei="-1"]';
 let setCounter = 0;
 
 const buildEffects = (selectedStar) => {
-    const starSet = stars.concat(stars).slice(stars.indexOf(selectedStar), stars.indexOf(selectedStar) + 27);
+    const starSet = getStarSet(selectedStar);
     const counter = (setCounter++).toString();
 
     const rowZero = document.createElement('td');
@@ -38,14 +39,7 @@ const buildEffects = (selectedStar) => {
     }
 };
 
-const createTable = () => {
-    const table = document.createElement('table');
-    document.body.appendChild(table);
-};
-
-const createBlankRows = () => {
-    const table = document.getElementsByTagName('table')[0];
-
+const createBlankRows = (table) => {
     for (let i = -1; i < 27; ++i) {
         const tr = document.createElement('tr');
 
@@ -55,11 +49,11 @@ const createBlankRows = () => {
 };
 
 const createEffectHeaders = () => {
-    ['Jenmam', 'Anujenmam', 'Thrijenmam'].forEach((jenmam, index) => {
+    effectGroups.forEach((group, index) => {
         const th = document.createElement('th');
         const tr = document.querySelector(`tr[data-ei="${index * 9}"]`);
 
-        th.innerHTML = jenmam;
+        th.innerHTML = group;
         th.setAttribute('rowspan', '9');
         th.dataset.or = 'v'; // orientation
         tr.appendChild(th);
@@ -84,7 +78,10 @@ const createHeaderSpacer = () => {
 const createStarSelector = () => {
     const tr = document.querySelector(headerSelector);
     const td = document.createElement('td');
-    const select = buildStarSelector(buildEffects);
+    const select = buildStarSelector((event, selectedStar) => {
+        event.target.value = undefined;
+        buildEffects(selectedStar);
+    });
 
     td.appendChild(select);
     td.dataset.ss = 'y'; // star selector
@@ -101,8 +98,7 @@ const createStarSelector = () => {
 };
 
 const buildTable = () => {
-    createTable();
-    createBlankRows();
+    createBlankRows(createBasicTable());
     createEffectHeaders();
     createHeaderSpacer();
     createStarSelector();
