@@ -1,12 +1,12 @@
-import {effectGroups, effects} from '../effects.js';
-import {buildStarSelector, getStarSet} from '../stars.js';
+import {buildStarSelector, getStarSet, stars} from '../stars.js';
 import {createBasicTable} from '../table.js';
+import {getEffectSet} from '../effects.js';
 
-const headerSelector = 'tr[data-ei="-1"]';
+const headerSelector = 'tr[data-si="-1"]';
 let setCounter = 0;
 
 const buildEffects = (selectedStar) => {
-    const starSet = getStarSet(selectedStar);
+    const effectSet = getEffectSet(selectedStar);
     const counter = (setCounter++).toString();
 
     const rowZero = document.createElement('td');
@@ -18,19 +18,18 @@ const buildEffects = (selectedStar) => {
     };
     button.innerHTML = 'X';
     rowZero.appendChild(button);
+    rowZero.appendChild(document.createTextNode(` ${selectedStar}`));
 
-    const rows = [rowZero].concat(starSet.map((star) => {
+    const rows = [rowZero].concat(effectSet.map((effect) => {
         const td = document.createElement('td');
-        td.innerHTML = star;
-        td.dataset.str = star;
+        td.innerHTML = effect;
         td.dataset.set = counter;
-        td.dataset.int = 'y'; // interactive
-        td.onclick = () => buildEffects(star);
+        td.dataset.eff = effect;
         return td;
     }));
 
     for (let i = -1; i < 27; ++i) {
-        const tr = document.querySelector(`tr[data-ei="${i}"]`);
+        const tr = document.querySelector(`tr[data-si="${i}"]`);
         const ss = tr.querySelector('td[data-ss="y"]');
 
         if (ss) {
@@ -45,27 +44,17 @@ const createBlankRows = (table) => {
     for (let i = -1; i < 27; ++i) {
         const tr = document.createElement('tr');
 
-        tr.dataset.ei = i; // effect index
+        tr.dataset.si = i.toString(); // star index
         table.appendChild(tr);
     }
 };
 
-const createEffectHeaders = () => {
-    effectGroups.forEach((group, index) => {
+const createStarHeaders = () => {
+    stars.forEach((star, index) => {
         const th = document.createElement('th');
-        const tr = document.querySelector(`tr[data-ei="${index * 9}"]`);
+        const tr = document.querySelector(`tr[data-si="${index}"]`);
 
-        th.innerHTML = group;
-        th.setAttribute('rowspan', '9');
-        th.dataset.or = 'v'; // orientation
-        tr.appendChild(th);
-    });
-
-    effects.concat(effects, effects).forEach((effect, index) => {
-        const th = document.createElement('th');
-        const tr = document.querySelector(`tr[data-ei="${index}"]`);
-
-        th.innerHTML = effect;
+        th.innerHTML = star;
         tr.appendChild(th);
     });
 };
@@ -73,7 +62,6 @@ const createEffectHeaders = () => {
 const createHeaderSpacer = () => {
     const tr = document.querySelector(headerSelector);
     const td = document.createElement('td');
-    td.colSpan = 2;
     tr.appendChild(td);
 };
 
@@ -91,7 +79,7 @@ const createStarSelector = () => {
 
     Array.from({length: 3}).forEach((_, index) => {
         const td = document.createElement('td');
-        const tr = document.querySelector(`tr[data-ei="${index * 9}"]`);
+        const tr = document.querySelector(`tr[data-si="${index * 9}"]`);
 
         td.setAttribute('rowspan', '9');
         td.dataset.ss = 'y'; // star selector
@@ -101,7 +89,7 @@ const createStarSelector = () => {
 
 const buildTable = () => {
     createBlankRows(createBasicTable());
-    createEffectHeaders();
+    createStarHeaders();
     createHeaderSpacer();
     createStarSelector();
 };

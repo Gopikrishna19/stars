@@ -8,7 +8,9 @@ const buildCell = (star, select, rerender) => {
     const td = document.createElement('td');
 
     td.innerHTML = star;
+    td.dataset.str = star; // star
     td.dataset.set = 'y'; // star set
+    td.dataset.int = 'y'; // interactive
     td.onclick = () => {
         select.value = star;
         rerender(star, select);
