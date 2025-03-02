@@ -1,0 +1,18 @@
+table {
+    border-spacing: 0;
+}
+
+td, th {
+    box-sizing: border-box;
+    width: 175px;
+    white-space: nowrap;
+    padding: 10px;
+}
+
+td {
+    transition: background .3s;
+}
+
+th {
+    text-align: left;
+}
