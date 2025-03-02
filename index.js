@@ -1,36 +1,9 @@
-const select = document.querySelector('#star-selector');
-const singleStars = [
-  'Ashwini',
-  'Bharani',
-  'Kritthika',
-  'Rohini',
-  'Mrgashirsha',
-  'Ardhra',
-  'Punarvasu',
-  'Pushya',
-  'Ashlesha',
-  'Magha',
-  'Poorva Phalguni',
-  'Uthara Phalguni',
-  'Hastham',
-  'Chithra',
-  'Swathi',
-  'Vaishaka',
-  'Anuradha',
-  'Jyeshta',
-  'Moola',
-  'Poorva Ashada',
-  'Uthara Ashada',
-  'Shravana',
-  'Dhanishta',
-  'Shathabisha',
-  'Poorva Bhadrapada',
-  'Uthara Bhadrapada',
-  'Revathi'
-];
-const stars = singleStars.concat(singleStars);
+import {stars} from './stars.js';
 
-singleStars.forEach((star, index) => select.appendChild(new Option(star, index)));
+const select = document.querySelector('#star-selector');
+const starSet = stars.concat(stars);
+
+stars.forEach((star, index) => select.appendChild(new Option(star, index)));
 
 const cleanGrid = () => document.querySelectorAll('.star').forEach(starElement => starElement.remove());
 
@@ -51,7 +24,7 @@ const redraw = value => {
       const td = document.createElement('td');
       const tr = document.querySelectorAll('tr')[j + 1];
 
-      td.innerHTML = stars[starIndex];
+      td.innerHTML = starSet[starIndex];
       td.classList.add('star');
       td.setAttribute('data-index', `${starIndex % 27}`);
       td.onclick = setStar;

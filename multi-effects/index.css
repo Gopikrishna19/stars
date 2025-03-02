@@ -1,0 +1,62 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+}
+
+table {
+    border-spacing: 0;
+}
+
+tr:nth-child(n+2):nth-child(-n+10) {
+    background-color: #f8f8f8;
+}
+
+tr:nth-child(n+11):nth-child(-n+19) {
+    background-color: #e8e8e8;
+}
+
+tr:nth-child(n+20):nth-child(-n+28) {
+    background-color: #d8d8d8;
+}
+
+td, th {
+    box-sizing: border-box;
+    width: 175px;
+    white-space: nowrap;
+    padding: 10px;
+}
+
+td {
+    transition: background .3s;
+}
+
+tr:nth-child(9n + 2) td[data-set],
+tr:nth-child(9n + 4) td[data-set],
+tr:nth-child(9n + 6) td[data-set],
+tr:nth-child(9n + 8) td[data-set] {
+    background-color: #fbe9e7;
+}
+
+tr:nth-child(9n + 3) td[data-set],
+tr:nth-child(9n + 5) td[data-set],
+tr:nth-child(9n + 7) td[data-set],
+tr:nth-child(9n + 9) td[data-set],
+tr:nth-child(9n + 10) td[data-set] {
+    background-color: #e8f5e9;
+}
+
+td[data-set][data-set]:hover {
+    cursor: pointer;
+    background-color: #80deea;
+    transition: background 0s;
+}
+
+th {
+    text-align: left;
+}
+
+th[data-or="v"] {
+    writing-mode: sideways-lr;
+    max-width: calc(1.5em + 20px);
+    text-align: right;
+}
