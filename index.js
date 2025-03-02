@@ -4,11 +4,11 @@ import {effectGroups, effects} from './effects.js';
 
 const headerSelector = 'tr[data-ei="-1"]';
 
-const buildCell = (star, select, rerender) => {
+const buildCell = (star, effect, select, rerender) => {
     const td = document.createElement('td');
 
     td.innerHTML = star;
-    td.dataset.str = star; // star
+    td.dataset.eff = effect;
     td.dataset.set = 'y'; // star set
     td.dataset.int = 'y'; // interactive
     td.onclick = () => {
@@ -27,9 +27,9 @@ const buildEffects = (selectedStar, select) => {
     for (let i = 0; i < 9; ++i) {
         const tr = document.querySelector(`tr[data-ei="${i}"]`);
 
-        tr.appendChild(buildCell(starSet[i], select, buildEffects));
-        tr.appendChild(buildCell(starSet[i + 9], select, buildEffects));
-        tr.appendChild(buildCell(starSet[i + 18], select, buildEffects));
+        tr.appendChild(buildCell(starSet[i], effects[i], select, buildEffects));
+        tr.appendChild(buildCell(starSet[i + 9], effects[i], select, buildEffects));
+        tr.appendChild(buildCell(starSet[i + 18], effects[i], select, buildEffects));
     }
 };
 
@@ -45,7 +45,7 @@ const createBlankRows = (table) => {
 const createEffectHeaders = () => {
     const tr = document.querySelector(headerSelector);
 
-    effectGroups.forEach((group, index) => {
+    effectGroups.forEach((group) => {
         const th = document.createElement('th');
 
         th.innerHTML = group;
