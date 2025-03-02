@@ -1,19 +1,9 @@
-import {stars} from './stars.js';
+import {buildStarSelector, stars} from './stars.js';
 
-const select = document.querySelector('#star-selector');
+const select = buildStarSelector((_, value) => redraw(value));
 const starSet = stars.concat(stars);
 
-stars.forEach((star, index) => select.appendChild(new Option(star, index)));
-
 const cleanGrid = () => document.querySelectorAll('.star').forEach(starElement => starElement.remove());
-
-const setStar = event => {
-  const {index} = event.target.dataset;
-
-  select.value = index;
-
-  redraw(index);
-};
 
 const redraw = value => {
   cleanGrid();
@@ -27,11 +17,14 @@ const redraw = value => {
       td.innerHTML = starSet[starIndex];
       td.classList.add('star');
       td.setAttribute('data-index', `${starIndex % 27}`);
-      td.onclick = setStar;
+      td.onclick = () => {
+          select.value = starSet[starIndex];
+          redraw(starIndex % 27);
+      };
 
       tr.appendChild(td);
     }
   }
 };
 
-select.onchange = event => redraw(event.target.value);
+document.getElementById('star-selector').appendChild(select);

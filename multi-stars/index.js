@@ -1,5 +1,5 @@
 import {effects} from '../effects.js';
-import {stars} from '../stars.js';
+import {buildStarSelector, stars} from '../stars.js';
 
 const headerSelector = 'tr[data-ei="-1"]';
 let setCounter = 0;
@@ -84,26 +84,7 @@ const createHeaderSpacer = () => {
 const createStarSelector = () => {
     const tr = document.querySelector(headerSelector);
     const td = document.createElement('td');
-    const select = document.createElement('select');
-
-    const optionZero = document.createElement('option');
-    optionZero.value = undefined;
-    optionZero.innerHTML = 'Select a star';
-    optionZero.disabled = true;
-    optionZero.selected = true;
-    select.appendChild(optionZero);
-
-    stars.forEach(star => {
-        const option = document.createElement('option');
-        option.value = star;
-        option.innerHTML = star;
-        select.appendChild(option);
-    });
-
-    select.onchange = () => {
-        buildEffects(select.value);
-        select.value = undefined;
-    };
+    const select = buildStarSelector(buildEffects);
 
     td.appendChild(select);
     td.dataset.ss = 'y'; // star selector
